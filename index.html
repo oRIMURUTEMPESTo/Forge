@@ -84,19 +84,19 @@
                 <div class="upload-area" id="upload-area">
                   <input type="file" id="art-file" accept="image/*" hidden />
                   <div class="upload-symbol">✧</div>
-                  <strong>Añade una ilustración</strong>
-                  <span>Arrastra una imagen aquí o búscala en tu dispositivo</span>
+                  <strong>Añade y recorta la ilustración frontal</strong>
+                  <span>Podrás moverla, acercarla y ajustar su encuadre</span>
                   <button class="button button-outline" id="choose-art">Elegir imagen</button>
                 </div>
                 <div class="image-controls" id="image-controls" hidden>
                   <div class="image-thumb" id="image-thumb"></div>
-                  <div><strong>Ilustración añadida</strong><p>Aparecerá en la ventana de arte de tu carta.</p><button class="text-button" id="remove-art">Quitar imagen</button></div>
+                  <div><strong>Ilustración frontal</strong><p>El encuadre se usa en la vista previa y las exportaciones.</p><button class="text-button" id="recrop-art">Ajustar recorte</button><button class="text-button" id="choose-art-again">Cambiar imagen</button><button class="text-button" id="remove-art">Quitar imagen</button></div>
                 </div>
                 <div class="back-art-section">
                   <p class="field-label">Ilustración del reverso <span class="optional">OPCIONAL</span></p>
                   <input id="back-art-file" type="file" accept="image/*" hidden />
                   <button class="button button-outline" id="choose-back-art">Subir imagen para el reverso</button>
-                  <div class="back-image-controls" id="back-image-controls" hidden><span>Imagen del reverso añadida</span><button class="text-button" id="remove-back-art">Quitar</button></div>
+                  <div class="back-image-controls" id="back-image-controls" hidden><span>Imagen del reverso añadida</span><button class="text-button" id="recrop-back-art">Ajustar recorte</button><button class="text-button" id="choose-back-art-again">Cambiar imagen</button><button class="text-button" id="remove-back-art">Quitar</button></div>
                 </div>
                 <label class="field">Símbolo de la carta <span class="optional">ICONO</span></label>
                 <div id="icon-picker" class="icon-picker"></div>
@@ -181,6 +181,29 @@
         <footer class="main-footer"><span>✧</span> CREADO PARA DAR FORMA A NUEVAS HISTORIAS <span>✧</span></footer>
       </main>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <div class="crop-backdrop" id="crop-backdrop" hidden>
+        <section class="crop-dialog" role="dialog" aria-modal="true" aria-labelledby="crop-title">
+          <div class="crop-heading">
+            <div><p class="eyebrow">AJUSTAR ILUSTRACIÓN</p><h2 id="crop-title">Encuadra tu imagen</h2><p id="crop-description">Arrastra la imagen para ajustar el encuadre.</p></div>
+            <button class="modal-close" id="crop-close" aria-label="Cancelar recorte">×</button>
+          </div>
+          <div class="crop-stage" id="crop-stage">
+            <img id="crop-image" alt="" draggable="false" />
+            <div class="crop-viewport" id="crop-viewport" aria-label="Área interactiva de recorte">
+              <div class="crop-discard-mask" aria-hidden="true"></div>
+              <div class="crop-guides" aria-hidden="true"><i></i><i></i></div>
+              <div class="crop-safe-area" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="crop-controls">
+            <label for="crop-zoom">Zoom</label>
+            <input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1" />
+            <output id="crop-zoom-value" for="crop-zoom">100 %</output>
+          </div>
+          <p class="crop-hint">La cuadrícula marca tercios; el borde interior indica el área segura. Lo oscurecido queda fuera del recorte.</p>
+          <div class="crop-actions"><button class="button button-quiet" id="crop-cancel">Cancelar</button><button class="button button-primary" id="crop-apply">Usar este recorte</button></div>
+        </section>
+      </div>
       <div class="print-backdrop" id="print-backdrop" hidden>
         <div class="print-preview-toolbar">
           <div><p class="eyebrow">LISTO PARA IMPRIMIR</p><strong id="print-title">Vista previa del PDF</strong><small id="print-subtitle">A4 horizontal · hasta 8 cartas por hoja</small></div>

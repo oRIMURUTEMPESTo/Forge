@@ -28,6 +28,7 @@ document.getElementById("import-file").addEventListener("change", event => {
 });
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") {
+    if (!document.getElementById("crop-backdrop").hidden) closeCropper();
     if (!modal.hidden) closeDeckModal();
     exportMenu.hidden = true;
     deckMenu.hidden = true;

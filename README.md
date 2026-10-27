@@ -88,9 +88,22 @@ mazos anteriores se normalizan al tamaño Póker predeterminado.
 - **Iconos integrados:** agrega el símbolo a `ICONS` en `data.js`.
 - **Subida de recursos:** los flujos de iconos, ilustraciones y marcos están en
   `assets.js`; las imágenes se procesan antes de guardarse en el navegador.
+- **Recorte de ilustraciones:** `assets.js` contiene el editor de recorte común
+  para el frente y el reverso. Los ajustes de proporción de las zonas visibles
+  están en `CROP_PRESETS`; los tamaños de miniatura se mantienen sincronizados
+  en `styles.css` y en la hoja de impresión dentro de `exports.js`.
 - **Estilos de la carta:** ajusta las reglas en `styles.css`. La vista previa y la
   impresión tienen estilos propios, así que valida ambas al cambiar la
   presentación.
+
+Al subir una ilustración, el editor de recorte permite arrastrarla, acercarla con
+el control de zoom, componerla con la guía de tercios y proteger elementos dentro
+del área segura. El sombreado exterior muestra qué partes se descartan. Se genera
+una imagen WebP recortada para guardar y usar el mismo encuadre en la vista previa,
+la carta y el PDF. Los recortes frontales usan una proporción 1.9:1 y los traseros
+3.6:1, para coincidir con sus respectivas áreas de ilustración. Después de subir
+una imagen, usa **Ajustar recorte** para volver a componer la versión guardada o
+**Cambiar imagen** para elegir otra.
 
 ## Comprobar cambios
 

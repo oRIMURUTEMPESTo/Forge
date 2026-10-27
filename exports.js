@@ -74,7 +74,7 @@ async function exportWebP() {
   ctx.fillText(MODES[card.mode].label.toLocaleUpperCase("es"), 32, 42);
   ctx.fillStyle = palette[1]; ctx.font = "bold 14px sans-serif";
   ctx.fillText((card.details.challenge || card.details.level || card.details.rarity || card.details.difficulty || "").slice(0, 16), 300, 42);
-  const x = 30, y = 57, w = 340, h = 245;
+  const x = 30, y = 57, w = 340, h = Math.round(340 / CROP_PRESETS.front.aspect);
   const artGradient = ctx.createLinearGradient(x, y, x + w, y + h);
   artGradient.addColorStop(0, palette[2]); artGradient.addColorStop(1, palette[3]);
   ctx.fillStyle = artGradient; ctx.fillRect(x, y, w, h);
@@ -190,7 +190,7 @@ function printHTML(cards, title, deckMode, sizeId) {
     .print-card .card-rank { display:flex; align-items:center; gap:1.5mm; flex:0 0 auto; color:var(--frame); }
     .print-card .card-rank small { font-size:5pt; }
     .print-card .card-rank b { color:var(--frame); text-align:right; font-size:7pt; }
-    .art { position:relative; height:30mm; flex:0 0 30mm; overflow:hidden; display:grid; place-items:center; background:linear-gradient(145deg,var(--art1),var(--art2)); border: .6mm solid var(--bright); }
+    .art { position:relative; width:100%; aspect-ratio:1.9; height:auto; flex:0 0 auto; overflow:hidden; display:grid; place-items:center; background:linear-gradient(145deg,var(--art1),var(--art2)); border: .6mm solid var(--bright); }
     .art-image { width:100%; height:100%; object-fit:cover; }.art-icon { color:#eee0af; font:36pt Georgia,serif; }
     .icon-art { object-fit:contain; padding:7mm; background:linear-gradient(145deg,var(--art1),var(--art2)); }
     .print-card h2 { font: bold 10pt Georgia,serif; margin:1.5mm 0 .5mm; }
@@ -203,7 +203,7 @@ function printHTML(cards, title, deckMode, sizeId) {
     .print-card footer span { text-align:center; }
     .front-highlights { overflow:hidden; flex:1; font-size:5.7pt; line-height:1.15; }.front-highlights p { margin:0 0 .7mm; }
     .back-print-card h2 { font-size:8pt; margin:1mm 0; }.back-description { max-height:16mm; overflow:hidden; }
-    .back-art { width:100%; max-height:16mm; object-fit:cover; margin:0 0 1mm; }
+    .back-art { width:100%; aspect-ratio:3.6; height:auto; object-fit:cover; margin:0 0 1mm; }
     .abilities-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:.5mm; margin:1mm 0; text-align:center; }
     .abilities-grid span { display:grid; justify-items:center; padding:.7mm 0; background:#e9e2d0; }
     .abilities-grid b { font-size:5pt; }.abilities-grid strong { color:var(--frame); font-size:9pt; line-height:1.1; }.abilities-grid small { color:#555; font-size:4.5pt; }
