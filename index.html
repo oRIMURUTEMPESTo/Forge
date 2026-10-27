@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111914" />
+    <title>Fable Forge — Taller de D&D 5e</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Uncial+Antiqua&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Fable Forge, inicio">
+          <span class="brand-mark">✦</span>
+          <span class="brand-name">Fable <b>Forge</b><small>TALLER DE D&D 5e · FAN TOOL</small></span>
+        </a>
+
+        <div class="side-section">
+          <div class="section-heading"><span>TUS MAZOS</span><button class="icon-button" id="add-deck" title="Crear mazo" aria-label="Crear mazo">＋</button></div>
+          <div id="deck-list" class="deck-list"></div>
+        </div>
+
+        <div class="side-actions">
+          <button class="side-action" id="backup-button"><span>⇧</span> Copia de seguridad</button>
+          <button class="side-action" id="import-button"><span>⇩</span> Importar datos</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden />
+        </div>
+        <div class="sidebar-footer"><span class="privacy-dot"></span> Tus creaciones se guardan<br />solo en este dispositivo.</div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Bestiario y grimorio</span><span class="crumb-separator">/</span><strong id="deck-title">Primer mazo</strong><div class="deck-menu-wrap"><button class="deck-menu-toggle" id="deck-menu-toggle" aria-label="Opciones del mazo" aria-expanded="false">•••</button><div class="deck-menu" id="deck-menu" hidden><button data-deck-action="rename">Renombrar mazo</button><button data-deck-action="duplicate">Duplicar mazo</button><button data-deck-action="delete">Eliminar mazo</button></div></div></div>
+          <div class="top-actions">
+            <span class="save-state"><span class="save-dot"></span> Guardado</span>
+            <button class="button button-quiet" id="new-card">＋ <span>Nueva carta</span></button>
+            <div class="export-wrap">
+              <button class="button button-primary" id="export-button" aria-expanded="false"><span>↓</span> Exportar <span class="export-caret">⌄</span></button>
+              <div class="export-menu" id="export-menu" hidden>
+                <p>DATOS</p>
+                <button data-export="json-card">JSON · Carta actual</button>
+                <button data-export="json-deck">JSON · Mazo completo</button>
+                <p>IMAGEN</p>
+                <button data-export="webp">WebP · Carta actual</button>
+                <p>IMPRIMIR / GUARDAR COMO PDF</p>
+                <button data-export="pdf-card">PDF · Carta actual</button>
+                <button data-export="pdf-deck">PDF · Mazo completo</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="workspace">
+          <section class="editor-column">
+            <div class="page-heading">
+              <div><p class="eyebrow">DUNGEONS &amp; DRAGONS · 5.ª EDICIÓN</p><h1>Prepara tu próxima <em>aventura.</em></h1></div>
+              <div class="card-count" id="card-count">01 <span>/ 01</span></div>
+            </div>
+
+            <div class="editor-card">
+              <div class="editor-tabs" role="tablist">
+                <button class="editor-tab active" data-tab="details" role="tab">✦ <span>Detalles</span></button>
+                <button class="editor-tab" data-tab="art" role="tab">▧ <span>Ilustración</span></button>
+                <button class="editor-tab" data-tab="style" role="tab">◈ <span>Estilo</span></button>
+              </div>
+
+              <div class="tab-panel active" id="tab-details">
+                <label class="field">Tipo de contenido
+                  <select id="card-mode">
+                    <option value="monster">Monstruo</option><option value="spell">Conjuro</option>
+                    <option value="item">Objeto mágico</option><option value="npc">PNJ</option><option value="encounter">Encuentro</option>
+                  </select>
+                </label>
+                <label class="field">Nombre<input id="card-name" maxlength="60" placeholder="Ej. Nombre de la criatura" /></label>
+                <div id="mode-fields" class="mode-fields"></div>
+                <label class="field">Descripción / notas<textarea id="card-description" maxlength="1200" rows="4" placeholder="Rasgos, efecto, historia o detalles para tu mesa..."></textarea></label>
+                <label class="field">Nota del DM <span class="optional">OPCIONAL</span><input id="card-flavor" maxlength="180" placeholder="Un secreto, pista o apunte privado..." /></label>
+              </div>
+
+              <div class="tab-panel" id="tab-art" hidden>
+                <div class="upload-area" id="upload-area">
+                  <input type="file" id="art-file" accept="image/*" hidden />
+                  <div class="upload-symbol">✧</div>
+                  <strong>Añade una ilustración</strong>
+                  <span>Arrastra una imagen aquí o búscala en tu dispositivo</span>
+                  <button class="button button-outline" id="choose-art">Elegir imagen</button>
+                </div>
+                <div class="image-controls" id="image-controls" hidden>
+                  <div class="image-thumb" id="image-thumb"></div>
+                  <div><strong>Ilustración añadida</strong><p>Aparecerá en la ventana de arte de tu carta.</p><button class="text-button" id="remove-art">Quitar imagen</button></div>
+                </div>
+                <div class="back-art-section">
+                  <p class="field-label">Ilustración del reverso <span class="optional">OPCIONAL</span></p>
+                  <input id="back-art-file" type="file" accept="image/*" hidden />
+                  <button class="button button-outline" id="choose-back-art">Subir imagen para el reverso</button>
+                  <div class="back-image-controls" id="back-image-controls" hidden><span>Imagen del reverso añadida</span><button class="text-button" id="remove-back-art">Quitar</button></div>
+                </div>
+                <label class="field">Símbolo de la carta <span class="optional">ICONO</span></label>
+                <div id="icon-picker" class="icon-picker"></div>
+                <div class="asset-upload-row">
+                  <label class="field">Añadir icono propio<input id="custom-icon-name" maxlength="24" placeholder="Nombre del icono" /></label>
+                  <input id="custom-icon-file" type="file" accept="image/*" hidden />
+                  <button class="button button-outline" id="upload-icon">Subir icono</button>
+                </div>
+                <p class="asset-hint">Se optimiza y guarda en tus datos. Se recomienda una imagen cuadrada.</p>
+              </div>
+
+              <div class="tab-panel" id="tab-style" hidden>
+                <label class="field">Tamaño de las cartas del mazo
+                  <select id="deck-card-size">
+                    <option value="poker">Póker · 63,5 × 88,9 mm</option>
+                    <option value="tarot">Tarot · 70 × 120 mm</option>
+                  </select>
+                </label>
+                <p class="asset-hint">Se aplica a la vista previa y a todas las cartas de este mazo al imprimir o guardar en PDF.</p>
+                <p class="field-label">Marco de carta</p>
+                <div class="theme-grid" id="theme-grid"></div>
+                <details class="theme-creator">
+                  <summary>＋ Crear un tema personalizado</summary>
+                  <label class="field">Nombre del tema<input id="theme-name" maxlength="24" placeholder="Ej. Dragón carmesí" /></label>
+                  <div class="color-fields">
+                    <label class="color-field"><span>Marco</span><input id="theme-frame" type="color" value="#803d38" /></label>
+                    <label class="color-field"><span>Acento</span><input id="theme-accent" type="color" value="#e2b974" /></label>
+                    <label class="color-field"><span>Ilustración</span><input id="theme-art" type="color" value="#a64736" /></label>
+                  </div>
+                  <label class="field">Marco transparente (opcional)<input id="theme-frame-file" type="file" accept="image/png,image/webp" /></label>
+                  <p class="asset-hint">Sube un PNG/WebP transparente, idealmente de 400 × 560 px. Se superpone a la carta y también se imprime en PDF.</p>
+                  <button class="button button-outline" id="create-theme">Guardar tema</button>
+                </details>
+                <div class="style-note"><span>✦</span><p>Cada marco da a tus cartas una identidad propia. Prueba distintos estilos para encontrar el que mejor cuenta tu historia.</p></div>
+              </div>
+              <div class="editor-footer"><button class="text-button danger-button" id="delete-card">Eliminar carta</button><span>Formato de exportación <b>400 × 560 px</b></span></div>
+            </div>
+          </section>
+
+          <section class="preview-column">
+            <div class="preview-heading"><div><p class="eyebrow">VISTA PREVIA</p><h2>Tu carta</h2></div><div class="preview-tools"><div class="side-toggle"><button class="side-toggle-button active" data-side="front">Frente</button><button class="side-toggle-button" data-side="back">Reverso</button></div><span class="live-badge"><span></span> EN VIVO</span></div></div>
+            <div class="card-stage">
+              <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+              <article class="playing-card theme-verdant" id="preview-card">
+                <div class="card-inner">
+                  <div class="card-topline"><span id="preview-type">MONSTRUO</span><span class="card-cost"><b id="preview-cost">—</b><i id="preview-cost-unit">VD</i></span></div>
+                  <div class="card-art" id="preview-art">
+                    <div class="art-glow"></div><div class="art-sigil" id="preview-icon">✧</div><img class="custom-card-icon" id="preview-custom-icon" alt="" hidden />
+                    <img id="preview-image" alt="" hidden />
+                    <span class="art-caption">FABLE FORGE · EST. 2025</span>
+                  </div>
+                  <div class="card-face front-face" id="preview-front">
+                    <div class="card-title-row"><h3 id="preview-name">Nueva criatura</h3><span class="rarity-gem">✦</span></div>
+                    <div class="card-rule"></div>
+                    <div class="preview-meta" id="preview-meta"></div>
+                    <p class="preview-description" id="preview-description"></p>
+                    <div class="preview-highlights" id="preview-highlights"></div>
+                    <p class="preview-flavor" id="preview-flavor"></p>
+                    <div class="preview-stats" id="preview-stats"></div>
+                    <div class="card-bottom"><span>✦</span><span>FABLE FORGE</span><span>✦</span></div>
+                  </div>
+                  <div class="card-face back-face" id="preview-back" hidden>
+                    <div class="back-heading"><span id="back-mode">MONSTRUO · REVERSO</span><span>✦</span></div>
+                    <h3 id="back-name">Nueva criatura</h3>
+                    <div class="card-rule"></div>
+                    <img class="back-image" id="preview-back-image" alt="" hidden />
+                    <p class="back-description" id="back-description"></p>
+                    <div class="back-abilities" id="back-abilities"></div>
+                    <div class="back-details" id="back-details"></div>
+                    <p class="back-dm-note" id="back-dm-note"></p>
+                    <div class="card-bottom"><span>✦</span><span>FABLE FORGE · REVERSO</span><span>✦</span></div>
+                  </div>
+                  <img class="card-frame-overlay" id="preview-frame-overlay" alt="" hidden />
+                </div>
+              </article>
+              <div class="preview-shadow"></div>
+            </div>
+            <div class="preview-caption"><span class="keyboard-hint" id="preview-size">63.5 × 88.9 mm</span><span>La vista previa se actualiza al editar</span></div>
+            <div class="deck-strip"><div class="strip-label"><span>EN ESTE MAZO</span><button id="strip-add" title="Nueva carta">＋</button></div><div id="card-strip" class="card-strip"></div></div>
+          </section>
+        </div>
+        <footer class="main-footer"><span>✧</span> CREADO PARA DAR FORMA A NUEVAS HISTORIAS <span>✧</span></footer>
+      </main>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <div class="print-backdrop" id="print-backdrop" hidden>
+        <div class="print-preview-toolbar">
+          <div><p class="eyebrow">LISTO PARA IMPRIMIR</p><strong id="print-title">Vista previa del PDF</strong><small id="print-subtitle">A4 horizontal · hasta 8 cartas por hoja</small></div>
+          <div><button class="button button-quiet" id="print-close">Volver al editor</button><button class="button button-primary" id="print-action">Imprimir / Guardar PDF</button></div>
+        </div>
+        <iframe id="print-frame" title="Vista previa de impresión"></iframe>
+      </div>
+      <div class="modal-backdrop" id="modal-backdrop" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <button class="modal-close" id="modal-close" aria-label="Cerrar">×</button>
+          <span class="modal-icon">✧</span><p class="eyebrow" id="modal-eyebrow">NUEVO MAZO</p><h2 id="modal-title">Abre un nuevo capítulo.</h2>
+          <label class="field">Nombre del mazo<input id="deck-name-input" maxlength="30" placeholder="Ej. Reliquias del norte" /></label>
+          <div class="modal-actions"><button class="button button-quiet" id="modal-cancel">Cancelar</button><button class="button button-primary" id="modal-create">Crear mazo</button></div>
+        </div>
+      </div>
+    </div>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="assets.js"></script>
+    <script src="exports.js"></script>
+    <script src="backup.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
